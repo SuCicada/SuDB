@@ -17,11 +17,12 @@ import java.util.Properties;
 public class DBManager {
     static DBManager DBM = null;
     Connection connection;
-    String JDBC_DRIVER;
-    String DB_URL;
-    String USER;
-    String PASSWORD;
-    private static BasicDataSource youds = new BasicDataSource();
+    static String JDBC_DRIVER;
+    static String DATABASE;
+    static String DB_URL;
+    static String USER;
+    static String PASSWORD;
+    private static BasicDataSource ds = null;
     private String db;
     private String characterEncoding;
     Logger log = Logger.getLogger(this.getClass());
@@ -29,12 +30,15 @@ public class DBManager {
     private DBManager(){}
 
     public static DBManager getInstanc(){
-        if (DBM == null){
+        if (DBM == null || ds.isClosed()){
             DBM = new DBManager();
+            /* 解决关闭连接池，并新开连接池，不占用mysql连接进程*/
+            ds = new BasicDataSource();
             DBM.DBHelp();
         }
         return DBM;
     }
+
     public static DBManager getInstance(String driver){
         if (DBM == null){
             DBM = new DBManager();
@@ -42,6 +46,7 @@ public class DBManager {
         }
         return DBM;
     }
+
     private void DBHelp(String driver){
         Properties properties = new Properties();
         try {
@@ -54,8 +59,11 @@ public class DBManager {
             properties.load(new java.io.FileInputStream(file));
 
 
+            String Host = properties.getProperty(driver+".host");
+            String Port = properties.getProperty(driver+".port");
+            DATABASE = properties.getProperty(driver+".database");
             JDBC_DRIVER = properties.getProperty(driver + ".driver");
-            DB_URL = properties.getProperty(driver + ".url");
+            DB_URL = properties.getProperty(driver + ".url")+Host+":"+Port+"/"+DATABASE;
             USER = properties.getProperty(driver + ".username");
             PASSWORD = properties.getProperty(driver + ".password");
             characterEncoding = properties.getProperty(driver + ".characterEncoding");
@@ -92,9 +100,11 @@ public class DBManager {
             log.error(ex.getMessage());
         }
     }
+
     private void DBHelp() {
         this.DBHelp("default");
     }
+
     /**
      * 建立与数据库的链接并链接
      * @return
@@ -106,5 +116,17 @@ public class DBManager {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void close(){
+        try {
+            ds.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getDBName(){
+        return DATABASE;
     }
 }

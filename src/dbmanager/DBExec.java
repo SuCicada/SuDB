@@ -56,6 +56,32 @@ public class DBExec {
         }
         return list;
     }
+    /**
+     * 执行更新sql语句
+     * @param sql
+     * @return int，反映影响数据表中的记录数
+     */
+    public int update(String sql,String ... args) throws DBException {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement stat = null;
+        try {
+            conn = getConnection();
+            stat = conn.prepareStatement(sql);
+            for (int i = 0; i < args.length; i++) {
+                stat.setObject(i + 1, args[i]);
+            }
+            System.out.println(stat.toString());
+            result = stat.executeUpdate();
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage());
+            //            e.printStackTrace();
+        } finally {
+            close(stat, conn);
+        }
+        return result;
+    }
+
     private Connection getConnection() {
         DBManager dbm =  DBManager.getInstanc();
         return dbm.getConnection();
@@ -104,28 +130,9 @@ public class DBExec {
             }
         }
     }
-    /**
-     * 执行更新sql语句
-     * @param sql
-     * @return int，反映影响数据表中的记录数
-     */
-    public int update(String sql,String ... args){
-        int result = 0;
-        Connection conn = null;
-        PreparedStatement stat = null;
-        try {
-            conn = getConnection();
-            stat = conn.prepareStatement(sql);
-            for (int i = 0; i < args.length; i++) {
-                stat.setObject(i + 1, args[i]);
-            }
-            System.out.println(stat.toString());
-            result = stat.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            close(stat, conn);
-        }
-        return result;
+
+    public void fullClose(){
+        DBManager.getInstanc().close();
     }
+
 }
