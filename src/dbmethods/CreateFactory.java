@@ -77,7 +77,7 @@ public class CreateFactory {
             String columnName = (String)column.get("column_name");
             String dataType = (String)column.get("data_type");
             String columnKey = (String)column.get("column_key");
-            String columnComment = (String)column.get("column_comment");K
+            String columnComment = (String)column.get("column_comment");
             javaSchema.append("\tprivate ");
         }
 
