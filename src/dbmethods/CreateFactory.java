@@ -5,8 +5,11 @@ import dbmanager.DBExec;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.net.URI;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class CreateFactory {
     private String sql = null;
@@ -42,44 +45,5 @@ public class CreateFactory {
         executeSql();
     }
 
-    public void createEntities(List<String> tables) throws DBException, IOException {
-        String dirName = "entities";
-        File dir = new File(dirName);
-        dir.mkdir();
 
-        for(String table : tables){
-            createEntity(table,dirName);
-        }
-    }
-    public void createEntity(String table,String dirName) throws DBException, IOException {
-        List<Map<String, Object>> columns = EasyQuery.getColumns(table);
-        String tableName = table.substring(0,1).toUpperCase()+table.substring(1).toLowerCase();
-        File javaFile = new File(dirName+"/"+tableName+".java");
-        if(javaFile.exists()){
-            javaFile.delete();
-        }
-        javaFile.createNewFile();
-        BufferedWriter bw = new BufferedWriter(new FileWriter(javaFile));
-
-    }
-    public String buildJavaCode(String dirName,String tableName,List<Map<String, Object>> columns){
-        StringBuffer javaSchema = new StringBuffer();
-        StringBuffer classMembers = new StringBuffer();
-        StringBuffer classGetter = new StringBuffer();
-        StringBuffer classSetter = new StringBuffer();
-
-
-        javaSchema.append("package "+dirName+";\n");
-
-        javaSchema.append(String.format("public class %s {",tableName));
-
-        for(Map<String, Object> column: columns){
-            String columnName = (String)column.get("column_name");
-            String dataType = (String)column.get("data_type");
-            String columnKey = (String)column.get("column_key");
-            String columnComment = (String)column.get("column_comment");
-            javaSchema.append("\tprivate ");
-        }
-
-    }
 }
