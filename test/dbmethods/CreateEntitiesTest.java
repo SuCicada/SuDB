@@ -15,7 +15,7 @@ public class CreateEntitiesTest {
     @Test
     public void createEntities() {
         try {
-            new CreateEntities().createEntities(Arrays.asList(new String[]{"user"}));
+            new CreateEntities().createEntities(Arrays.asList(new String[]{"user"}),"org.peng");
         } catch (DBException e) {
             e.printStackTrace();
         } catch (IOException e) {

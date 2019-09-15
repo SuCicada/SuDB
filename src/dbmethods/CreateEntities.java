@@ -8,10 +8,19 @@ import java.net.URI;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ *
+ * @author  SuCicada
+ */
 public class CreateEntities {
+    /** 生成的实体类目录所在目录*/
     private String dirName;
-    Properties properties = new Properties();
+    /** 实体类自定义包名　*/
+    private String packageName;
+    /** 实体类自定义包路径*/
     private String packagePath;
+    /** 数据类型对照表*/
+    Properties properties = new Properties();
 
     public void createEntities(List<String> tables) throws DBException, IOException {
         createEntities(tables,null);
@@ -23,7 +32,8 @@ public class CreateEntities {
         properties.load(new FileInputStream(file));
 
         /* 创建实体类目录*/
-        dirName = "entities";
+        packageName = "entities";
+        dirName = "out/" + packageName;
         File dir = new File(dirName);
         dir.mkdir();
 
@@ -69,7 +79,7 @@ public class CreateEntities {
 
         Set<String> jarSet =  new HashSet<>();
 
-        javaSchema.append(packagePath + "package "+dirName+";\n\n");
+        javaSchema.append("package " + packagePath + packageName+";\n\n");
 
         for(Map<String, Object> column: columns){
             String columnName = (String)column.get("column_name");
