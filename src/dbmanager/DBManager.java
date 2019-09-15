@@ -19,6 +19,7 @@ public class DBManager {
     Connection connection;
     static String JDBC_DRIVER;
     static String DATABASE;
+    static String DBType;
     static String DB_URL;
     static String USER;
     static String PASSWORD;
@@ -67,6 +68,7 @@ public class DBManager {
             USER = properties.getProperty(driver + ".username");
             PASSWORD = properties.getProperty(driver + ".password");
             characterEncoding = properties.getProperty(driver + ".characterEncoding");
+            DBType = properties.getProperty(driver + ".databaseType");
 
             String InitialSize = properties.getProperty(driver + ".InitialSize");
             String MaxActive = properties.getProperty(driver + ".MaxActive");
@@ -126,7 +128,11 @@ public class DBManager {
         }
     }
 
-    public static String getDBName(){
+    public String getDBName(){
         return DATABASE;
+    }
+
+    public String getDBType(){
+        return DBType;
     }
 }

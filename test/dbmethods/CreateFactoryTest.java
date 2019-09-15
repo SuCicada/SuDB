@@ -1,5 +1,6 @@
-package dbmanager;
+package dbmethods;
 
+import dbmanager.DBException;
 import dbmethods.CreateFactory;
 import org.junit.Test;
 
