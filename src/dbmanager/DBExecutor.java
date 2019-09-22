@@ -1,11 +1,14 @@
 package dbmanager;
 
+
+import dbeasy.EasyQuery;
+import dbeasy.EasyQueryForMySQL;
+
 import java.sql.*;
 import java.util.*;
 
-public class DBExec {
-    DBManager dbManager;
 
+public class DBExecutor {
     /**
      * 执行查询sql语句
      * @param sql
@@ -82,6 +85,10 @@ public class DBExec {
         return result;
     }
 
+    /**
+     * 得到连接对象
+     * @return
+     */
     private Connection getConnection() {
         DBManager dbm =  DBManager.getInstanc();
         return dbm.getConnection();
@@ -131,8 +138,21 @@ public class DBExec {
         }
     }
 
+    /**
+     * 关闭连接池
+     */
     public void fullClose(){
         DBManager.getInstanc().close();
     }
 
+    /**
+     * 得到easyQuery
+     * [这里怎么做工程模式]
+     * @return
+     */
+    public EasyQuery getEasyQuery(){
+
+        EasyQuery easyQuery = new EasyQueryForMySQL();
+        return easyQuery;
+    }
 }

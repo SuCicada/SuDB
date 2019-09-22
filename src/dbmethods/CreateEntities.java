@@ -1,7 +1,9 @@
 package dbmethods;
 
+import dbeasy.EasyQuery;
 import dbmanager.DBException;
-import dbmanager.DBExec;
+import dbmanager.DBExecutor;
+import dbmanager.DBManager;
 
 import java.io.*;
 import java.net.URI;
@@ -21,10 +23,12 @@ public class CreateEntities {
     private String packagePath;
     /** 数据类型对照表*/
     Properties properties = new Properties();
+    EasyQuery easyQuery = DBManager.getInstanc().getDBExecutor().getEasyQuery();
 
     public void createEntities(List<String> tables) throws DBException, IOException {
         createEntities(tables,null);
     }
+
     public void createEntities(List<String> tables,String packagePath) throws DBException, IOException {
         /*读取数据类型参照表*/
         URI uri = Paths.get("src/db2java.properties").toAbsolutePath().toUri();
@@ -66,9 +70,10 @@ public class CreateEntities {
         bw.write(buildJavaCode(tableName));
         bw.close();
     }
-    private String buildJavaCode(String tableName) throws IOException, DBException {
-        List<Map<String, Object>> columns = EasyQuery.getColumns(tableName.toLowerCase());
-        String DBType = EasyQuery.getDBType();
+
+    private String buildJavaCode(String tableName) throws DBException {
+        List<Map<String, Object>> columns = easyQuery.getColumns(tableName.toLowerCase());
+        String DBType = easyQuery.getDBType();
 
         StringBuffer javaSchema = new StringBuffer();
         StringBuffer javaSchemaConstructorParameter = new StringBuffer();

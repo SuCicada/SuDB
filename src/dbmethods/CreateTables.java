@@ -1,19 +1,17 @@
 package dbmethods;
 
 import dbmanager.DBException;
-import dbmanager.DBExec;
+import dbmanager.DBExecutor;
+import dbmanager.DBManager;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.net.URI;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
-public class CreateFactory {
+public class CreateTables {
     private String sql = null;
     private Logger log = Logger.getLogger(this.getClass());
+    private DBExecutor dbExecutor = DBManager.getInstanc().getDBExecutor();
+
 
     private void readSqlFile(String filePath){
         StringBuilder sb = new StringBuilder();
@@ -33,7 +31,7 @@ public class CreateFactory {
     }
 
     private void executeSql() throws DBException {
-        new DBExec().update(sql);
+        dbExecutor.update(sql);
     }
 
     public void createTableFromFile(String filePath) throws DBException {

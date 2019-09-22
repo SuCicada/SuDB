@@ -40,6 +40,10 @@ public class DBManager {
         return DBM;
     }
 
+    public DBExecutor getDBExecutor(){
+        return new DBExecutor();
+    }
+
     public static DBManager getInstance(String driver){
         if (DBM == null){
             DBM = new DBManager();
@@ -120,6 +124,10 @@ public class DBManager {
         return null;
     }
 
+
+    /**
+     * 关闭连接池
+     */
     public void close(){
         try {
             ds.close();
@@ -128,10 +136,18 @@ public class DBManager {
         }
     }
 
+    /**
+     * 得到数据库名称
+     * @return
+     */
     public String getDBName(){
         return DATABASE;
     }
 
+    /**
+     * 得到数据库source类型
+     * @return
+     */
     public String getDBType(){
         return DBType;
     }
