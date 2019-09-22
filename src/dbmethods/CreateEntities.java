@@ -4,6 +4,7 @@ import dbeasy.EasyQuery;
 import dbmanager.DBException;
 import dbmanager.DBExecutor;
 import dbmanager.DBManager;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.net.URI;
@@ -24,6 +25,8 @@ public class CreateEntities {
     /** 数据类型对照表*/
     Properties properties = new Properties();
     EasyQuery easyQuery = DBManager.getInstanc().getDBExecutor().getEasyQuery();
+    Logger log = Logger.getLogger(this.getClass());
+
 
     public void createEntities(List<String> tables) throws DBException, IOException {
         createEntities(tables,null);
@@ -69,6 +72,7 @@ public class CreateEntities {
         /* 将构造好的java代码写入到文件中*/
         bw.write(buildJavaCode(tableName));
         bw.close();
+        System.out.println("Create Entity successful.");
     }
 
     private String buildJavaCode(String tableName) throws DBException {

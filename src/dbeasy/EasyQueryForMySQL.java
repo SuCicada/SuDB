@@ -21,7 +21,7 @@ public class EasyQueryForMySQL implements EasyQuery{
     @Override
     public  List<Map<String,Object>> getColumns(String table) throws DBException {
         String db = getDBName();
-        return new DBExecutor().query(String.format("select column_name,column_key,data_type,column_comment from" +
+        return dbExecutor.query(String.format("select column_name,column_key,data_type,column_comment from" +
                 " information_schema.columns where" +
                 " table_schema='%s' and table_name='%s';",db,table));
     }

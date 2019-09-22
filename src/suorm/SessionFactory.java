@@ -1,39 +1,15 @@
 package suorm;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created with IntelliJ IDEA.
  * User: peng
- * Date: 9/21/19
- * Time: 5:05 PM
+ * Date: 9/22/19
+ * Time: 5:08 PM
  * To change this template use File | Settings | File Templates.
  * Description:
  */
-public class SessionFactory implements Session{
-    @Override
-    public int insert(Object element) {
-        return 0;
-    }
-
-    @Override
-    public int delete() {
-        return 0;
-    }
-
-    @Override
-    public List<Map<String, Object>> select() {
-        return null;
-    }
-
-    @Override
-    public int update() {
-        return 0;
-    }
-
-    @Override
-    public Object get(Class Entity, int Id) {
+public class SessionFactory {
+    public Session openSession(){
         return null;
     }
 }

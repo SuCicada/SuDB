@@ -9,6 +9,13 @@ import java.util.*;
 
 
 public class DBExecutor {
+    private DBManager dbm;
+
+    public DBExecutor(DBManager dbm){
+//         dbm = DBManager.getInstanc();
+        this.dbm = dbm;
+    }
+
     /**
      * 执行查询sql语句
      * @param sql
@@ -78,7 +85,6 @@ public class DBExecutor {
             result = stat.executeUpdate();
         } catch (SQLException e) {
             throw new DBException(e.getMessage());
-            //            e.printStackTrace();
         } finally {
             close(stat, conn);
         }
@@ -90,7 +96,6 @@ public class DBExecutor {
      * @return
      */
     private Connection getConnection() {
-        DBManager dbm =  DBManager.getInstanc();
         return dbm.getConnection();
     }
 

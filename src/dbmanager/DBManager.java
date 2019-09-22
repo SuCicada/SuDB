@@ -16,7 +16,7 @@ import java.util.Properties;
 
 public class DBManager {
     static DBManager DBM = null;
-    Connection connection;
+    private Connection connection;
     static String JDBC_DRIVER;
     static String DATABASE;
     static String DBType;
@@ -41,7 +41,7 @@ public class DBManager {
     }
 
     public DBExecutor getDBExecutor(){
-        return new DBExecutor();
+        return new DBExecutor(getInstanc());
     }
 
     public static DBManager getInstance(String driver){
