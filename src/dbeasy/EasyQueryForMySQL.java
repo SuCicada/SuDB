@@ -30,4 +30,9 @@ public class EasyQueryForMySQL implements EasyQuery{
     public List<Map<String, Object>> getRows(String table) throws DBException {
         return null;
     }
+
+    @Override
+    public List<Map<String, Object>> showTables() throws DBException {
+        return dbExecutor.query("show tables;");
+    }
 }

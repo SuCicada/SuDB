@@ -1,5 +1,7 @@
 package suorm;
 
+import dbmanager.DBManager;
+
 /**
  * Created with IntelliJ IDEA.
  * User: peng
@@ -9,7 +11,13 @@ package suorm;
  * Description:
  */
 public class SessionFactory {
+    DBManager dbm;
+
+    public SessionFactory(DBManager dbm){
+        this.dbm = dbm;
+    }
+
     public Session openSession(){
-        return null;
+        return new SessionImpl();
     }
 }

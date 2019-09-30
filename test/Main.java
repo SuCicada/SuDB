@@ -1,6 +1,8 @@
 import dbmanager.DBManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import suorm.Session;
+import suorm.SessionFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,16 +13,12 @@ import org.slf4j.LoggerFactory;
  * Description:
  */
 
-class A{
-    static String name;
-    public static void fun(){
-        System.out.println(name);
-    }
-
-}
 public class Main {
+
     public static void main(String[] args) {
-//        Session = DBManager.getInstanc();
-        System.out.println("sdfs");
+        DBManager dbm = DBManager.getInstanc();
+        SessionFactory sf = new SessionFactory(dbm);
+        Session session = sf.openSession();
+//        System.out.println("sdfs");
     }
 }

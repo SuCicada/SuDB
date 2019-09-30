@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<SuDB-configuration>
+  <SuDB-mapping>
+    <class name="T_user" table="user">
+      <id name="id" type="INT" column="id"/>
+      <property name="username" type="VARCHAR" column="username"/>
+      <property name="password" type="VARCHAR" column="password"/>
+    </class>
+    <class name="T_admin" table="admin">
+      <id name="id" type="INT" column="id"/>
+      <property name="username" type="VARCHAR" column="username"/>
+      <property name="password" type="VARCHAR" column="password"/>
+    </class>
+  </SuDB-mapping>
+</SuDB-configuration>

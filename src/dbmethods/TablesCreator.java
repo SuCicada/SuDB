@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 
 import java.io.*;
 
-public class CreateTables {
+public class TablesCreator {
     private String sql = null;
     private Logger log = Logger.getLogger(this.getClass());
     private DBExecutor dbExecutor = DBManager.getInstanc().getDBExecutor();
@@ -34,7 +34,7 @@ public class CreateTables {
         dbExecutor.update(sql);
     }
 
-    public void createTableFromFile(String filePath) throws DBException {
+    public void createTableFromSQL(String filePath) throws DBException {
         readSqlFile(filePath);
         executeSql();
     }
@@ -43,5 +43,8 @@ public class CreateTables {
         executeSql();
     }
 
+    public void createTableFromXML(String filePath){
+
+    }
 
 }

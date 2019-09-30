@@ -32,7 +32,7 @@ public class DBExecutor {
             for (int i = 0; i < args.length; i++) {
                 stat.setObject(i + 1, args[i]);
             }
-            //System.out.println(stat.toString());
+            System.out.println(stat.toString());
             rs = stat.executeQuery();
             list = resultSetToList(rs);
 
@@ -43,6 +43,7 @@ public class DBExecutor {
         }
         return list;
     }
+
     /**
      * 将resultset转化为List
      *
@@ -66,6 +67,7 @@ public class DBExecutor {
         }
         return list;
     }
+
     /**
      * 执行更新sql语句
      * @param sql
@@ -153,11 +155,20 @@ public class DBExecutor {
     /**
      * 得到easyQuery
      * [这里怎么做工程模式]
+     * [使用了簡單工廠]
      * @return
      */
-    public EasyQuery getEasyQuery(){
+    public EasyQuery getEasyQuery() throws DBException {
+        String dbType = DBManager.getInstanc().getDBType();
+        EasyQuery easyQuery = null;
 
-        EasyQuery easyQuery = new EasyQueryForMySQL();
+        switch (dbType){
+            case "mysql":
+                easyQuery = new EasyQueryForMySQL();
+                break;
+            default:
+                throw new DBException("Unknown DBType: " + dbType);
+        }
         return easyQuery;
     }
 }

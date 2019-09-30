@@ -1,7 +1,7 @@
 package suorm;
 
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,7 +13,11 @@ import java.util.Map;
  */
 public class SessionImpl implements Session{
     @Override
-    public int insert(Object element) {
+    public int save(Class Entity, Object element) {
+        Method method[] = Entity.getDeclaredMethods();
+        Field field[] = Entity.getDeclaredFields();
+        StringBuilder sql;
+
         return 0;
     }
 
@@ -23,7 +27,7 @@ public class SessionImpl implements Session{
     }
 
     @Override
-    public List<Map<String, Object>> select() {
+    public Object select() {
         return null;
     }
 

@@ -2,9 +2,6 @@ package suorm;
 
 import dbmanager.DBExecutor;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created with IntelliJ IDEA.
  * User: peng
@@ -16,11 +13,11 @@ import java.util.Map;
 public interface Session {
     DBExecutor dbExecutor = null;
 
-    int insert(Object element);
+    int save(Class Entity, Object element);
 
     int delete();
 
-    List<Map<String,Object>> select();
+    Object select();
 
     int update();
 
