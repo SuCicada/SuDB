@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <SuDB-configuration>
-  <SuDB-mapping>
-    <class name="T_user" table="user">
-      <id name="id" type="INT" column="id"/>
-      <property name="username" type="VARCHAR" column="username"/>
-      <property name="password" type="VARCHAR" column="password"/>
+  <SuDB-mapping package="sucicada">
+    <class name="T_Address" table="Address">
+      <id name="AddressId" type="int" column="AddressId"/>
+      <property name="PersonId" type="int" column="PersonId"/>
+      <property name="City" type="varchar" column="City"/>
+      <property name="State" type="varchar" column="State"/>
+    </class>
+
+    <class name="T_Person" table="Person">
+      <id name="PersonId" type="int" column="PersonId"/>
+      <property name="FirstName" type="varchar" column="FirstName"/>
+      <property name="LastName" type="varchar" column="LastName"/>
     </class>
     <class name="T_admin" table="admin">
-      <id name="id" type="INT" column="id"/>
-      <property name="username" type="VARCHAR" column="username"/>
-      <property name="password" type="VARCHAR" column="password"/>
+      <id name="id" type="int" column="id"/>
+      <property name="username" type="varchar" column="username"/>
+      <property name="password" type="varchar" column="password"/>
+    </class>
+    <class name="T_log" table="log">
+      <id name="id" type="int" column="id"/>
+      <property name="user_id" type="int" column="user_id"/>
+      <property name="time" type="varchar" column="time"/>
+    </class>
+    <class name="T_user" table="user">
+      <id name="id" type="int" column="id"/>
+      <property name="username" type="varchar" column="username"/>
+      <property name="password" type="varchar" column="password"/>
     </class>
   </SuDB-mapping>
 </SuDB-configuration>

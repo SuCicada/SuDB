@@ -35,7 +35,8 @@ public class DBConfig {
     private String MinIdle;
     
     private String configFilePath;
-
+    private String driver;
+    private Properties properties;
 //    public DBConfig() {
 //        this.configFilePath = "src/dblook.properties";
 //    }
@@ -56,6 +57,20 @@ public class DBConfig {
     }
 
     public void config(String driver){
+        this.driver = driver;
+        try{
+            properties = readPropertiesFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String get(String name){
+        return properties.getProperty(driver+"."+name);
+    }
+
+    @Deprecated
+    public void config_old(String driver){
         try{
             Properties properties = readPropertiesFile();
 
@@ -77,9 +92,9 @@ public class DBConfig {
             this.DBType = properties.getProperty(driver + ".databaseType");
 
             this.InitialSize = properties.getProperty(driver + ".InitialSize");
-            this.MaxActive = properties.getProperty(driver + ".MaxActive");
-            this.MaxWait = properties.getProperty(driver + ".MaxWait");
-            this.MinIdle = properties.getProperty(driver + ".MinIdle");
+            this.MaxActive = properties.getProperty(driver + ".maxActive");
+            this.MaxWait = properties.getProperty(driver + ".maxWait");
+            this.MinIdle = properties.getProperty(driver + ".minIdle");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -88,7 +103,8 @@ public class DBConfig {
         }
     }
 
-    public String get(String name){
+    @Deprecated
+    public String get_old(String name){
         String res = null;
         try {
             Class clazz = this.getClass();

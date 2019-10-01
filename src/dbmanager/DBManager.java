@@ -15,6 +15,7 @@ public class DBManager {
     static DBManager DBM = null;
     private static BasicDataSource ds = null;
     private Logger log = Logger.getLogger(this.getClass());
+    private static DBConfig configure;
 
     private static String JDBC_DRIVER;
     private static String DATABASE;
@@ -23,13 +24,20 @@ public class DBManager {
     private static String USER;
     private static String PASSWORD;
     private String characterEncoding;
+    private String InitialSize;
+    private String MaxActive;
+    private String MaxWait;
+    private String MinIdle;
 
-    private static DBConfig configure;
+    private String entityMapping;
 
+    private static String dbLookPath = "src/dblook.properties";
+
+    private static String dbLookDriver = "default";
     private DBManager(){}
 
     public static DBManager getInstanc(){
-        return getInstanc("src/dblook.properties","default");
+        return getInstanc(dbLookPath,dbLookDriver);
     }
 
     public static DBManager getInstanc(String path,String driver){
@@ -42,7 +50,7 @@ public class DBManager {
         return DBM;
     }
 
-    public DBExecutor getDBExecutor(){
+    public DBExecutor getDBExecutor() {
         return new DBExecutor(getInstanc());
     }
 
@@ -51,22 +59,18 @@ public class DBManager {
         configure = new DBConfig(path);
         configure.config(driver);
 
-        String InitialSize;
-        String MaxActive;
-        String MaxWait;
-        String MinIdle;
-
-        DATABASE = configure.get("DATABASE");
-        JDBC_DRIVER = configure.get("JDBC_DRIVER");
-        DB_URL = configure.get("DB_URL");
-        USER = configure.get("USER");
-        PASSWORD = configure.get("PASSWORD");
+        DATABASE = configure.get("database");
+        JDBC_DRIVER = configure.get("jdbcDriver");
+        DB_URL = configure.get("url");
+        USER = configure.get("username");
+        PASSWORD = configure.get("password");
         characterEncoding = configure.get("characterEncoding");
-        DBType = configure.get("DBType");
-        InitialSize = configure.get("InitialSize");
-        MaxActive = configure.get("MaxActive");
-        MaxWait = configure.get("MaxWait");
-        MinIdle = configure.get("MinIdle");
+        DBType = configure.get("dbType");
+        InitialSize = configure.get("initialSize");
+        MaxActive = configure.get("maxActive");
+        MaxWait = configure.get("maxWait");
+        MinIdle = configure.get("minIdle");
+        entityMapping = configure.get("entityMapping");
 
         ds.setDriverClassName(JDBC_DRIVER);
         ds.setUrl(DB_URL);
@@ -119,6 +123,7 @@ public class DBManager {
      * 得到数据库名称
      * @return
      */
+    @Deprecated
     public String getDBName(){
         return DATABASE;
     }
@@ -127,8 +132,24 @@ public class DBManager {
      * 得到数据库source类型
      * @return
      */
-    @Deprecated
     public String getDBType(){
         return DBType;
+    }
+
+    public String getEntityMapping() {
+        return entityMapping;
+    }
+
+    public String getDbLookPath() {
+        return dbLookPath;
+    }
+    public void setDbLookPath(String dbLookPath) {
+        DBManager.dbLookPath = dbLookPath;
+    }
+    public String getDbLookDriver() {
+        return dbLookDriver;
+    }
+    public void setDbLookDriver(String dbLookDriver) {
+        DBManager.dbLookDriver = dbLookDriver;
     }
 }

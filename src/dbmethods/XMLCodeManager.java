@@ -3,9 +3,11 @@ package dbmethods;
 import dbmanager.DBException;
 import org.apache.logging.log4j.core.appender.FileManager;
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
 import java.io.File;
@@ -32,6 +34,16 @@ public class XMLCodeManager {
                 .addElement("SuDB-configuration")
                 .addElement("SuDB-mapping")
                 .getDocument();
+    }
+
+    public XMLCodeManager(Document document){
+        cnfDocument = document;
+    }
+
+    public XMLCodeManager(String path) throws DocumentException {
+        SAXReader reader = new SAXReader();
+        reader.setEncoding("utf-8");
+        cnfDocument = reader.read(new File(path));
     }
 
     public void setDB2JAVA(Map<String, String> db2java) throws DBException {
@@ -91,6 +103,20 @@ public class XMLCodeManager {
         return tableClass;
     }
 
+    /**
+     * [!] 在xml中查找某一个表的class的Element结点,目前采用遍历找, 试采用map等更高效方法
+     * @param className
+     * @return
+     */
+    public Element getClassElement(String className){
+        for(Element e: getMappingElement().elements()){
+            if(e.attributeValue("name").equals(className)){
+                return e;
+            }
+        }
+        return null;
+    }
+
     public void saveXmlFile(String path) throws IOException {
         FileWriter out = new FileWriter(path);
         OutputFormat formater=OutputFormat.createPrettyPrint();
@@ -100,9 +126,9 @@ public class XMLCodeManager {
         System.out.println("XML: "+path+" has saved successful.");
     }
 
-    public void saveXmlFile() throws IOException {
-        saveXmlFile("entities.sudb.xml");
-    }
+//    public void saveXmlFile() throws IOException {
+//        saveXmlFile("entities.sudb.xml");
+//    }
 
 
 

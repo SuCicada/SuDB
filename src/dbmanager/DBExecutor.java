@@ -22,33 +22,25 @@ public class DBExecutor {
      * @return
      */
     public List<Map<String,Object>> query(String sql,String ... args) throws DBException {
-        List list = null;
-        ResultSet rs = null;
-        Connection conn = null;
-        PreparedStatement stat = null;
-        try {
-            conn = getConnection();
-            stat = conn.prepareStatement(sql);
-            for (int i = 0; i < args.length; i++) {
-                stat.setObject(i + 1, args[i]);
-            }
-            System.out.println(stat.toString());
-            rs = stat.executeQuery();
-            list = resultSetToList(rs);
+        return (List<Map<String, Object>>) queryCore(sql,args,queryMethod.column);
+    }
 
-        } catch (SQLException e) {
-            throw new DBException(e.getMessage());
-        } finally {
-            close(rs,stat, conn);
-        }
-        return list;
+    /**
+     * 执行查询sql语句，结果以列分组
+     * @param sql
+     * @param args
+     * @return
+     * @throws DBException
+     */
+    public Map<String,List<Object>> queryWithRow(String sql,String ... args) throws DBException {
+        return (Map<String, List<Object>>) queryCore(sql,args,queryMethod.row);
     }
 
     /**
      * 将resultset转化为List
      *
      */
-    private List<Map<String, Object>> resultSetToList(ResultSet rs) throws SQLException {
+    private List<Map<String, Object>> resultSetToListWithColumn(ResultSet rs) throws SQLException {
         if (rs == null) {
             return Collections.EMPTY_LIST;
         }
@@ -56,17 +48,68 @@ public class DBExecutor {
         int columnCount = md.getColumnCount();
         List list = new ArrayList();
         //将map放入集合中方便使用个别的查询
-        Map rowData = new HashMap();
         while (rs.next()) {
-            rowData = new LinkedHashMap(columnCount);
+        Map rowData = new LinkedHashMap(columnCount);
             //将集合放在map中
             for (int i = 1; i <= columnCount; i++) {
-                rowData.put(md.getColumnName(i), rs.getObject(i));
+                rowData.put(md.getColumnLabel(i), rs.getObject(i));
             }
             list.add(rowData);
         }
         return list;
     }
+
+    public Map<String,List<Object>> resultSetToListWithRow(ResultSet rs) throws SQLException {
+        if (rs == null) {
+            return (Map<String, List<Object>>) Collections.EMPTY_LIST;
+        }
+        ResultSetMetaData md = rs.getMetaData();
+        int columnCount = md.getColumnCount();
+        rs.last();
+        int rowCount = rs.getRow();
+        rs.beforeFirst();
+        Map<String,List<Object>> rowData = new LinkedHashMap(columnCount);
+        while (rs.next()) {
+            for (int i = 1; i <= columnCount; i++) {
+                String column = md.getColumnLabel(i);
+                List<Object> list = rowData.get(column);
+                if(list == null || list.isEmpty()){
+                    list= new ArrayList(rowCount);
+                    rowData.put(column, list);
+                }
+                list.add(rs.getObject(i));
+            }
+        }
+        return rowData ;
+    }
+
+    private enum queryMethod{row,column};
+    private Object queryCore(String sql,String []args,queryMethod queryMethod) throws DBException {
+        Object res = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        PreparedStatement stat = null;
+        try {
+            conn = getConnection();
+            stat = prepareSQL(conn,sql,args);
+            System.out.println(stat.toString());
+            rs = stat.executeQuery();
+            switch(queryMethod){
+                case row:
+                    res = resultSetToListWithRow(rs);
+                    break;
+                case column:
+                    res = resultSetToListWithColumn(rs);
+            }
+
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage());
+        } finally {
+            close(rs,stat, conn);
+        }
+        return res;
+    }
+
 
     /**
      * 执行更新sql语句
@@ -79,10 +122,7 @@ public class DBExecutor {
         PreparedStatement stat = null;
         try {
             conn = getConnection();
-            stat = conn.prepareStatement(sql);
-            for (int i = 0; i < args.length; i++) {
-                stat.setObject(i + 1, args[i]);
-            }
+            stat = prepareSQL(conn,sql,args);
             System.out.println(stat.toString());
             result = stat.executeUpdate();
         } catch (SQLException e) {
@@ -91,6 +131,19 @@ public class DBExecutor {
             close(stat, conn);
         }
         return result;
+    }
+
+    public int update(String sql,List<String> args) throws DBException {
+        return update(sql,args.toArray(new String[args.size()]));
+    }
+
+
+    private PreparedStatement prepareSQL(Connection conn,String sql,String ... args) throws SQLException {
+        PreparedStatement stat = conn.prepareStatement(sql);
+        for (int i = 0; i < args.length; i++) {
+            stat.setObject(i + 1, args[i]);
+        }
+        return stat;
     }
 
     /**

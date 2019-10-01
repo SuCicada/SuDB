@@ -1,6 +1,13 @@
 package suorm;
 
 import dbmanager.DBManager;
+import dbmethods.XMLCode;
+import dbmethods.XMLCodeManager;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
+
+import java.io.File;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,12 +19,19 @@ import dbmanager.DBManager;
  */
 public class SessionFactory {
     DBManager dbm;
+    XMLCodeManager xmlCodeManager;
 
     public SessionFactory(DBManager dbm){
         this.dbm = dbm;
     }
 
-    public Session openSession(){
-        return new SessionImpl();
+    private void loadXML() throws DocumentException {
+        String xml = dbm.getEntityMapping();
+        xmlCodeManager = new XMLCodeManager(xml);
+    }
+
+    public Session openSession() throws DocumentException {
+        loadXML();
+        return new SessionImpl(xmlCodeManager);
     }
 }

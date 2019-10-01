@@ -21,9 +21,9 @@ public class EasyQueryForMySQL implements EasyQuery{
     @Override
     public  List<Map<String,Object>> getColumns(String table) throws DBException {
         String db = getDBName();
-        return dbExecutor.query(String.format("select column_name,column_key,data_type,column_comment from" +
+        return dbExecutor.query("select column_name,column_key,data_type,column_comment from" +
                 " information_schema.columns where" +
-                " table_schema='%s' and table_name='%s';",db,table));
+                " table_schema=? and table_name=?;",db,table);
     }
 
     @Override
@@ -31,8 +31,14 @@ public class EasyQueryForMySQL implements EasyQuery{
         return null;
     }
 
+    /**
+     * 查询数据库中的表，按照列排列方式返回
+     * @return
+     * @throws DBException
+     */
     @Override
-    public List<Map<String, Object>> showTables() throws DBException {
-        return dbExecutor.query("show tables;");
+    public Map<String, List<Object>> showTables() throws DBException {
+        return dbExecutor.queryWithRow("select table_name as table_name " +
+                "from information_schema.tables where table_schema=database();");
     }
 }

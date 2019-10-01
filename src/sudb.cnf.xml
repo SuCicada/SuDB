@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<SuDB-configuration>
-    <SuDB-mapping>
-        <class name="User" table="user">
-            <id name="id" column="id"></id>
-            <property name=""></property>
-        </class>
-    </SuDB-mapping>
-</SuDB-configuration>

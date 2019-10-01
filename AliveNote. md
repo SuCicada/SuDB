@@ -2,9 +2,19 @@
 [+] 需要根据数据库中的表  -->  实体类代码文件。
 [ ]  (Session)
 
-[ ] 根据行数据 -->  javabean
-[ ] sql 封装
+[+] 根据行数据 -->  javabean
+[-] sql 封装
 [ ] annotation的javabean
+[ ] 封装xml的element操作, 在createJava和session时候可用
+[ ] 根据xml映射表创建数据库表
+[ ] 在xml中查找某一个表的class的Element结点,目前采用遍历找, 试采用map等更高效方法
+
+-- 10/1
+- 增加按照列排版的query方法
+- 实现从xml映射表中创造javabean代码,并保存
+- 实现创造项目结构
+- [?] 关于数据库表的列名,因为默认的数据库表不分大小写.所以我是否应该直接将列名进行格式化.
+- [?] 像是在CodeCreator中 packageName就一直传到了JAVACodeManager中,有继续传到了JAVACode中. 这种模式有没有更好的方式
 
 -- 9/30
 - 刪除整個目錄

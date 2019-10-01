@@ -5,6 +5,7 @@ import dbmanager.DBException;
 import dbmanager.DBExecutor;
 import dbmanager.DBManager;
 import org.apache.log4j.Logger;
+import org.dom4j.DocumentException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +29,7 @@ public class CodeCreator {
     private String packageName;
     /** 实体类自定义包路径*/
     private String packagePath;
+    private String rootDir;
     /** 数据类型对照表*/
     Map<String,String> db2java;
     String db2javaFilePath;
@@ -36,15 +38,16 @@ public class CodeCreator {
 
     /** 簡單執行對象 */
     private EasyQuery easyQuery;
+    private DBManager dbManager;
     private Logger log = Logger.getLogger(this.getClass());
 
-//    private XMLCodeManager xmlCodeManager;
-
-    public CodeCreator() throws DBException {
+    public CodeCreator(DBManager dbManager) throws DBException, IOException {
         /* 默认数据库类型配置文件 */
-        easyQuery = DBManager.getInstanc().getDBExecutor().getEasyQuery();
+        this.dbManager = dbManager;
+        easyQuery = dbManager.getDBExecutor().getEasyQuery();
         db2javaFilePath = "src/db2java.properties";
         packageName = "sucicada";
+        rootDir = "SuDB-out-structure";
     }
 
     /**
@@ -99,15 +102,20 @@ public class CodeCreator {
     public void createStructure(){
         /* 创建实体类目录*/
 //        packageName = "entities";
-        String rootdir = "SuDB-out-structure";
-        delAll(new File(rootdir));
-        packagePath = packageName.replaceAll("\\.","/");
-        dirName = rootdir + "/src/"+packagePath+"/";
+        if(new File(rootDir).exists()){
+            System.out.println("Structure exists: "+rootDir);
+//            return ;
+        }
+        dirName = rootDir + "/src/"+packageName.replaceAll("\\.","/")+"/";
         File dir = new File(dirName);
         dir.mkdirs();
 
-        new File(dirName+"entities").mkdir();
+        packagePath = dirName+"entities";
+        new File(packagePath).mkdirs();
         System.out.println("Create Structure successful.");
+    }
+    public void cleanStructure(){
+        delAll(new File(rootDir));
     }
 
     /**
@@ -125,12 +133,14 @@ public class CodeCreator {
         file.delete();
     }
 
-    public void crateXML(){
-//        List columns =
+    public void createXML() throws DBException, IOException {
+        List columns = easyQuery.showTables().get("table_name");
+        System.out.println(columns);
+        createXML(columns);
     }
 
-    public void createXML(String[] tabales) throws DBException, IOException {
-        createXML(Arrays.asList(tabales));
+    public void createXML(String[] tables) throws DBException, IOException {
+        createXML(Arrays.asList(tables));
     }
 
     public void createXML(List<String> tables) throws DBException, IOException {
@@ -142,44 +152,33 @@ public class CodeCreator {
             List<Map<String, Object>> columns = easyQuery.getColumns(table);
             xmlCodeManager.createClassElement(table,columns);
         }
-        xmlCodeManager.saveXmlFile();
+        xmlCodeManager.saveXmlFile(rootDir+"/src/entities.sudb.xml");
     }
 
-    public void createJavaFromXML(){
-
+    public void createJavaFromXML() throws DocumentException, DBException, IOException {
+        createJavaFromXML(rootDir+"/src/entities.sudb.xml");
+    }
+    public void createJavaFromXML(String XMLpath) throws DocumentException, DBException, IOException {
+        JAVACodeManager javaBeanManager = new JAVACodeManager();
+        createStructure();
+        loadDB2JAVA();
+        javaBeanManager.setPackageName(packageName);
+        javaBeanManager.setPackagePath(packagePath);
+        javaBeanManager.setDb2java(db2java);
+        javaBeanManager.createFromXml(XMLpath);
     }
 
+    @Deprecated
     public void createJava(String[] tables){
         createJava(Arrays.asList(tables));
     }
 
+    @Deprecated
     public void createJava(List<String> tables){
-//        JAVACodeManager javaBeanManager = new JAVACodeManager();
 //        javaBeanManager.buildCodeFrom
         /*javaCode.init(this);*/
 //        javaCode.init(table,columns,DBType,db2java,packagePath,packageName);
 //        res = javaCode.buildCode();
-    }
-
-    public void createEntities(List<String> tables,String packagePath) throws DBException, IOException {
-
-//        createStructure(packagePath);
-
-        /*循环对每个表生成实体类*/
-        for(String table : tables){
-            createEntity(table);
-        }
-    }
-    public void createEntities(List<String> tables) throws DBException, IOException {
-        createEntities(tables,null);
-    }
-
-
-    private void createEntity(String table) throws DBException {
-        /* 根据表名得到表列信息*/
-        List<Map<String, Object>> columns = easyQuery.getColumns(table);
-//        createXmlCode(table);
-//        createJavaBean(table,columns);
     }
 
 

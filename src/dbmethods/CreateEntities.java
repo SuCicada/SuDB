@@ -27,7 +27,7 @@ public class CreateEntities {
     EasyQuery easyQuery = DBManager.getInstanc().getDBExecutor().getEasyQuery();
     Logger log = Logger.getLogger(this.getClass());
 
-    public CreateEntities() throws DBException {
+    public CreateEntities() throws DBException, IOException {
     }
 
 

@@ -1,6 +1,12 @@
 package suorm;
 
+import com.mysql.cj.x.protobuf.MysqlxCursor;
+import dbmanager.DBException;
 import dbmanager.DBExecutor;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,15 +17,16 @@ import dbmanager.DBExecutor;
  * Description:
  */
 public interface Session {
-    DBExecutor dbExecutor = null;
 
-    int save(Class Entity, Object element);
+    int save(Object entity) throws NoSuchMethodException, DBException, InvocationTargetException, IllegalAccessException;
 
-    int delete();
+    int delete(Object entity);
 
-    Object select();
+//    Object query(Class Entity, int Id);
 
-    int update();
+    List<Object> query(String str);
+
+    int update(Object entity);
 
     Object get(Class Entity, int Id);
 }

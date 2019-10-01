@@ -16,7 +16,7 @@ public interface EasyQuery {
 
     List<Map<String,Object>> getRows(String table) throws DBException;
 
-    List<Map<String,Object>> showTables() throws DBException;
+    Map<String,List<Object>> showTables() throws DBException;
 
     default String getDBName() throws DBException {
         return (String) dbExecutor.query("select database() as db;").get(0).get("db");
