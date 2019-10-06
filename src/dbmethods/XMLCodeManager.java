@@ -108,10 +108,10 @@ public class XMLCodeManager {
      * @param className
      * @return
      */
-    public Element getClassElement(String className){
+    public ClassElement getClassElement(String className){
         for(Element e: getMappingElement().elements()){
             if(e.attributeValue("name").equals(className)){
-                return e;
+                return new ClassElement(e);
             }
         }
         return null;

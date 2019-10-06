@@ -31,8 +31,9 @@ public class CodeCreator {
     private String packagePath;
     private String rootDir;
     /** 数据类型对照表*/
-    Map<String,String> db2java;
-    String db2javaFilePath;
+//    Map<String,String> db2java;
+    DB2JAVA db2java;
+//    String db2javaFilePath;
     /** 数据库类型 */
     private String DBType;
 
@@ -45,18 +46,13 @@ public class CodeCreator {
         /* 默认数据库类型配置文件 */
         this.dbManager = dbManager;
         easyQuery = dbManager.getDBExecutor().getEasyQuery();
-        db2javaFilePath = "src/db2java.properties";
+//        db2javaFilePath = "src/db2java.properties";
         packageName = "sucicada";
         rootDir = "SuDB-out-structure";
+//        db2java = new DB2JAVA(db2javaFilePath,easyQuery.getDBType());
+        db2java = DB2JAVAFactory.getDB2JAVA();
     }
 
-    /**
-     * 设置自己的数据库类型配置文件
-     * @param db2javaFilePath
-     */
-    public void setDb2javaFilePath(String db2javaFilePath){
-        this.db2javaFilePath = db2javaFilePath;
-    }
 
     public void setpackageName(String packageName){
         if(packageName != null && packageName.length() > 0){
@@ -64,37 +60,37 @@ public class CodeCreator {
         }
     }
 
-    /**
-     * 类型配置文件转map，消除数据库特异性
-     * @param properties
-     * @return
-     */
-    private Map properties2map(Properties properties){
-        Map<String,String> db2java = new HashMap();
-        for(Map.Entry<Object, Object> set :properties.entrySet()){
-            String[] en = set.getKey().toString().split("\\.");
-            if(en[0].equals(DBType)){
-                db2java.put(en[1], (String) set.getValue());
-            }
-        }
-        return db2java;
-    }
+//    /**
+//     * 类型配置文件转map，消除数据库特异性
+//     * @param properties
+//     * @return
+//     */
+//    private Map properties2map(Properties properties){
+//        Map<String,String> db2java = new HashMap();
+//        for(Map.Entry<Object, Object> set :properties.entrySet()){
+//            String[] en = set.getKey().toString().split("\\.");
+//            if(en[0].equals(DBType)){
+//                db2java.put(en[1], (String) set.getValue());
+//            }
+//        }
+//        return db2java;
+//    }
 
-    /**
-     * 载入数据库类型配置
-     * @throws IOException
-     */
-    public void loadDB2JAVA() throws IOException {
-        if(db2java == null){
-            /*读取数据类型参照表*/
-            URI uri = Paths.get(db2javaFilePath).toAbsolutePath().toUri();
-            File file = new File(uri);
-            Properties properties = new Properties();
-            properties.load(new FileInputStream(file));
-            DBType = easyQuery.getDBType();
-            db2java = properties2map(properties);
-        }
-    }
+//    /**
+//     * 载入数据库类型配置
+//     * @throws IOException
+//     */
+//    public void loadDB2JAVA() throws IOException {
+//        if(db2java == null){
+//            /*读取数据类型参照表*/
+//            URI uri = Paths.get(db2javaFilePath).toAbsolutePath().toUri();
+//            File file = new File(uri);
+//            Properties properties = new Properties();
+//            properties.load(new FileInputStream(file));
+//            DBType = easyQuery.getDBType();
+//            db2java = properties2map(properties);
+//        }
+//    }
 
     /**
      * 创建项目目录结构
@@ -114,6 +110,7 @@ public class CodeCreator {
         new File(packagePath).mkdirs();
         System.out.println("Create Structure successful.");
     }
+
     public void cleanStructure(){
         delAll(new File(rootDir));
     }
@@ -161,7 +158,7 @@ public class CodeCreator {
     public void createJavaFromXML(String XMLpath) throws DocumentException, DBException, IOException {
         JAVACodeManager javaBeanManager = new JAVACodeManager();
         createStructure();
-        loadDB2JAVA();
+//        loadDB2JAVA();
         javaBeanManager.setPackageName(packageName);
         javaBeanManager.setPackagePath(packagePath);
         javaBeanManager.setDb2java(db2java);

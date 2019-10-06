@@ -20,14 +20,14 @@ public interface Session {
 
     int save(Object entity) throws NoSuchMethodException, DBException, InvocationTargetException, IllegalAccessException;
 
-    int delete(Object entity);
+    int delete(Object entity) throws NoSuchMethodException, DBException, InvocationTargetException, IllegalAccessException;
 
 //    Object query(Class Entity, int Id);
 
-    List<Object> query(String str);
+    List<Object> query(String str) throws DBException;
 
-    int update(Object entity);
+    int update(Object entity) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, DBException;
 
-    Object get(Class Entity, int Id);
+    Object get(Class Entity, int id) throws DBException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException;
 }
 

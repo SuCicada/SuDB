@@ -20,7 +20,8 @@ import java.util.*;
  */
 public class JAVACodeManager {
     /** 数据类型对照表*/
-    private Map<String, String> db2java;
+//    private Map<String, String> db2java;
+    private DB2JAVA db2java;
     private String packageName;
     private String packagePath;
 
@@ -32,7 +33,7 @@ public class JAVACodeManager {
         this.packagePath = packagePath;
     }
 
-    public void setDb2java(Map db2java){
+    public void setDb2java(DB2JAVA db2java){
         this.db2java = db2java;
     }
 

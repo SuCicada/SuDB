@@ -1,6 +1,8 @@
 package dbmanager;
 
 //import org.apache.commons.dbcp.BasicDataSource;
+import dbeasy.EasyQuery;
+import dbmethods.DB2JAVA;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;
 
@@ -31,6 +33,9 @@ public class DBManager {
 
     private String entityMapping;
 
+//    private static DB2JAVA db2JAVA;
+    private static String db2javaFilePath = "src/db2java.properties";
+
     private static String dbLookPath = "src/dblook.properties";
 
     private static String dbLookDriver = "default";
@@ -45,6 +50,7 @@ public class DBManager {
             DBM = new DBManager();
             /* 解决关闭连接池，并新开连接池，不占用mysql连接进程*/
             ds = new BasicDataSource();
+//            db2JAVA = new DB2JAVA(db2javaFilePath, )
             DBM.DBHelp(path,driver);
         }
         return DBM;
@@ -123,7 +129,6 @@ public class DBManager {
      * 得到数据库名称
      * @return
      */
-    @Deprecated
     public String getDBName(){
         return DATABASE;
     }
@@ -132,10 +137,14 @@ public class DBManager {
      * 得到数据库source类型
      * @return
      */
+    @Deprecated
     public String getDBType(){
         return DBType;
     }
 
+    public String getDb2javaFilePath(){
+        return db2javaFilePath;
+    }
     public String getEntityMapping() {
         return entityMapping;
     }
@@ -150,6 +159,15 @@ public class DBManager {
         return dbLookDriver;
     }
     public void setDbLookDriver(String dbLookDriver) {
+
         DBManager.dbLookDriver = dbLookDriver;
     }
+    /**
+     * 设置自己的数据库类型配置文件
+     * @param db2javaFilePath
+     */
+    public void setDb2javaFilePath(String db2javaFilePath){
+        DBManager.db2javaFilePath = db2javaFilePath;
+    }
+
 }

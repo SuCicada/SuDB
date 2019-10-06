@@ -7,6 +7,7 @@ import suorm.Session;
 import suorm.SessionFactory;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,16 +20,20 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Main {
 
-    public static void main(String[] args) throws NoSuchMethodException, DBException, IllegalAccessException, InvocationTargetException, DocumentException {
+    public static void main(String[] args) throws NoSuchMethodException, DBException, IllegalAccessException, InvocationTargetException, DocumentException, InstantiationException, ClassNotFoundException {
         DBManager dbm = DBManager.getInstanc();
         SessionFactory sf = new SessionFactory(dbm);
         Session session = sf.openSession();
 
         T_user user = new T_user();
-        user.setUsername("123");
-        user.setPassword("1829239");
+//        user.setUsername("123");
+//        user.setPassword(new Date().toString());
 
-        int a = session.save(user);
-        System.out.println(a);
+//        int a = session.save(user);
+//        System.out.println(a);
+        user = (T_user) session.get(T_user.class,130);
+        user.setUsername(String.valueOf(Math.random()));
+        session.update(user);
+        System.out.println();
     }
 }

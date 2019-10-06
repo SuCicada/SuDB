@@ -21,11 +21,12 @@ import java.util.Set;
  */
 public class JAVACode {
     private String packageName;
-    private Map<String,String> db2java;
+//    private Map<String,String> db2java;
+    private DB2JAVA db2java;
     private StringBuffer code;
 
 
-    public JAVACode(String packageName, Map<String, String> db2java) {
+    public JAVACode(String packageName, DB2JAVA db2java) {
         this.packageName = packageName;
         this.db2java = db2java;
     }
